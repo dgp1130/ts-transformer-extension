@@ -26,3 +26,12 @@ Chrome:
 1. Check "Developer mode" in the top right.
 1. Click the newly visible "Load unpacked" button in the top left.
 1. Select the `dist/` directory of the built application.
+
+Next, run the example application with:
+
+```shell
+npm run serve
+```
+
+And then open your browser and visit [http://localhost:8080/](http://localhost:8080)
+and the site should work despite serving pure TypeScript and not having a build step.
