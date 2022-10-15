@@ -8,6 +8,9 @@ This is an alternative approach to the
 which should provide many of the same technical benefits without requiring changes to
 the language specification.
 
+**Only Firefox is supported because Chrome has some ludicrous policies around blocking
+web requests in an extension.**
+
 ## Local development
 
 Install the [pinned version of Node.js](/.nvmrc) or use `nvm use` to do this
@@ -19,13 +22,12 @@ Then build the extension with:
 npm run build
 ```
 
-This will generate a `dist/` directory with the extension contents. To install it in
-Chrome:
+This will generate a `dist/extension/` directory with the extension contents. To install
+it in Firefox:
 
-1. Visit [chrome://extensions](chrome://extensions).
-1. Check "Developer mode" in the top right.
-1. Click the newly visible "Load unpacked" button in the top left.
-1. Select the `dist/` directory of the built application.
+1.  Visit [about:debugging](chrome://extensions).
+1.  Click "This Firefox" in the left tab bar.
+1.  Click "Load temporary Add-on..." and pick any file under `dist/extension/`.
 
 Next, run the example application with:
 

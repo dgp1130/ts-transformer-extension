@@ -1,9 +1,14 @@
-// Don't use a typical `import` because that would make TypeScript treat this file as a
-// module (even for a type-only import) and generate an `export {};` statement which
-// breaks Firefox extension background scripts.
-type Browser = import('webextension-polyfill').Browser;
+import * as esbuild from 'esbuild-wasm';
+import type { Browser } from 'webextension-polyfill';
 
 declare const browser: Browser;
+
+const esBuildInit = esbuild.initialize({
+    wasmURL: '/esbuild.wasm',
+    // Disable workers as this seems to be done by pointing a worker at a blob URL which
+    // breaks CSP. TODO: Manually initialize the worker?
+    worker: false,
+});
 
 // Rewrite `Content-Type` header for transformed responses.
 browser.webRequest.onHeadersReceived.addListener(
@@ -30,10 +35,21 @@ browser.webRequest.onBeforeRequest.addListener(
         // Limit to obviously TypeScript files.
         if (!req.url.endsWith('.ts')) return;
 
-        const res = browser.webRequest.filterResponseData(req.requestId);
-        res.onstart = () => {
-            res.write(new TextEncoder().encode(`console.log('test');\n`));
-            res.close();
+        const responseFilter = browser.webRequest.filterResponseData(req.requestId);
+        responseFilter.onstart = async () => {
+            const res = await fetch(req.url);
+            if (res.status !== 200) {
+                responseFilter.write(await res.arrayBuffer());
+                responseFilter.close();
+            }
+
+            // TODO: Sourcemap
+            const ts = await res.text();
+            await esBuildInit;
+            const js = await esbuild.transform(ts, { loader: 'ts' });
+
+            responseFilter.write(new TextEncoder().encode(js.code));
+            responseFilter.close();
         };
     },
     {

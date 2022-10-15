@@ -3,9 +3,12 @@
   "version": "0.0.0",
   "description": "A browser extension which watches the network for TypeScript source code and transforms them to JavaScript.",
   "scripts": {
-    "build": "npm run -s clean && mkdir -p dist/ && npm run -s build:background && npm run -s build:manifest",
-    "build:background": "tsc -p tsconfig.background.json",
-    "build:manifest": "cp manifest.json dist/",
+    "build": "npm run -s clean && mkdir -p dist/extension/ && npm run -s build:background && npm run -s build:manifest",
+    "build:background": "npm run -s build:background:compile && npm run -s build:background:bundle && npm run -s build:background:esbuild",
+    "build:background:compile": "tsc -p tsconfig.background.json",
+    "build:background:esbuild": "cp node_modules/esbuild-wasm/esbuild.wasm dist/extension/",
+    "build:background:bundle": "esbuild --bundle dist/js/background.js --outfile=dist/extension/background.js --log-level=warning --sourcemap",
+    "build:manifest": "cp manifest.json dist/extension/",
     "serve": "http-server src/site/ --mimetypes '{ \"application/typescript\": [\"ts\"] }'",
     "clean": "rm -rf dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,6 +22,8 @@
   "license": "MIT",
   "devDependencies": {
     "@types/webextension-polyfill": "^0.9.1",
+    "esbuild": "^0.15.11",
+    "esbuild-wasm": "^0.15.11",
     "http-server": "^14.1.1",
     "typescript": "^4.8.4"
   }

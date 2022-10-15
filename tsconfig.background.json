@@ -3,7 +3,7 @@
     "files": ["src/background.ts"],
     "compilerOptions": {
         "rootDir": "src/",
-        "outDir": "dist/",
+        "outDir": "dist/js/",
         "lib": ["ES2022", "WebWorker"],
         "types": ["webextension-polyfill"],
     }
