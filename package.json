@@ -4,7 +4,7 @@
   "description": "A browser extension which watches the network for TypeScript source code and transforms them to JavaScript.",
   "scripts": {
     "build": "npm run -s clean && mkdir dist/ && npm run -s build:service-worker && npm run -s build:manifest",
-    "build:service-worker": "cp src/*.js dist/",
+    "build:service-worker": "tsc -p tsconfig.sw.json",
     "build:manifest": "cp manifest.json dist/",
     "clean": "rm -rf dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +15,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  }
 }

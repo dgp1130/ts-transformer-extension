@@ -1,0 +1,8 @@
+{
+    "extends": "./tsconfig.json",
+    "files": ["src/service-worker.ts"],
+    "compilerOptions": {
+        "rootDir": "src/",
+        "outDir": "dist/",
+    }
+}
