@@ -1,6 +1,6 @@
 {
     "files": [],
     "references": [
-        { "path": "./tsconfig.sw.json" },
+        { "path": "./tsconfig.background.json" },
     ],
 }

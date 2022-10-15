@@ -1,9 +1,10 @@
 {
     "extends": "./tsconfig.base.json",
-    "files": ["src/service-worker.ts"],
+    "files": ["src/background.ts"],
     "compilerOptions": {
         "rootDir": "src/",
         "outDir": "dist/",
-        "types": ["chrome"],
+        "lib": ["ES2022", "WebWorker"],
+        "types": ["webextension-polyfill"],
     }
 }

@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "description": "A browser extension which watches the network for TypeScript source code and transforms them to JavaScript.",
   "scripts": {
-    "build": "npm run -s clean && mkdir dist/ && npm run -s build:service-worker && npm run -s build:manifest",
-    "build:service-worker": "tsc -p tsconfig.sw.json",
+    "build": "npm run -s clean && mkdir -p dist/ && npm run -s build:background && npm run -s build:manifest",
+    "build:background": "tsc -p tsconfig.background.json",
     "build:manifest": "cp manifest.json dist/",
-    "serve": "http-server src/site/",
+    "serve": "http-server src/site/ --mimetypes '{ \"application/typescript\": [\"ts\"] }'",
     "clean": "rm -rf dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,7 +18,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@types/chrome": "^0.0.197",
+    "@types/webextension-polyfill": "^0.9.1",
     "http-server": "^14.1.1",
     "typescript": "^4.8.4"
   }
