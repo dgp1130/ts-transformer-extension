@@ -72,6 +72,9 @@ browser.webRequest.onBeforeRequest.addListener(
 // from `foo.ts`.
 browser.webRequest.onBeforeRequest.addListener(
     (req) => {
+        // Anything under `node_modules/` should be shipped as JS.
+        if (req.url.includes('/node_modules/')) return;
+
         return {
             redirectUrl: [ ...req.url.split('.').slice(0, -1), 'ts' ].join('.'),
         };
