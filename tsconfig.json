@@ -2,5 +2,6 @@
     "files": [],
     "references": [
         { "path": "./tsconfig.background.json" },
+        { "path": "./tsconfig.site.json" },
     ],
 }

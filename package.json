@@ -8,10 +8,12 @@
     "build:background:compile": "tsc -p tsconfig.background.json",
     "build:background:esbuild": "cp node_modules/esbuild-wasm/esbuild.wasm dist/extension/",
     "build:background:bundle": "esbuild --bundle dist/js/background.js --outfile=dist/extension/background.js --log-level=warning --sourcemap",
+    "build:background:typecheck": "tsc -p tsconfig.background.json --noEmit",
     "build:manifest": "cp manifest.json dist/extension/",
+    "build:site:typecheck": "tsc -p tsconfig.site.json --noEmit",
     "serve": "http-server src/site/ -c-1 --mimetypes '{ \"application/typescript\": [\"ts\"] }'",
     "clean": "rm -rf dist/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run -s build:background:typecheck && npm run -s build:site:typecheck"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
     "esbuild": "^0.15.11",
     "esbuild-wasm": "^0.15.11",
     "http-server": "^14.1.1",
+    "lit": "^2.4.0",
     "typescript": "^4.8.4"
   }
 }
