@@ -37,18 +37,33 @@ browser.webRequest.onBeforeRequest.addListener(
 
         const responseFilter = browser.webRequest.filterResponseData(req.requestId);
         responseFilter.onstart = async () => {
+            // Proxy the requested TypeScript file.
             const res = await fetch(req.url);
+
+            // Bail on any errors in the proxied request.
             if (res.status !== 200) {
                 responseFilter.write(await res.arrayBuffer());
                 responseFilter.close();
             }
 
-            // TODO: Sourcemap
+            // Transform the TypeScript into JavaScript.
             const ts = await res.text();
             await esBuildInit;
-            const js = await esbuild.transform(ts, { loader: 'ts' });
+            const js = await esbuild.transform(ts, {
+                loader: 'ts',
+                sourcemap: true,
+                sourcefile: req.url.split('/').at(-1)!,
+            });
 
-            responseFilter.write(new TextEncoder().encode(js.code));
+            // Print warnings to the console.
+            for (const warning of js.warnings) {
+                console.warn(warning.text);
+            }
+
+            // Respond with the transformed JavaScript.
+            responseFilter.write(new TextEncoder().encode(`${
+                js.code}\n//# sourceMappingURL=data:application/json;base64,${
+                btoa(js.map)}\n`));
             responseFilter.close();
         };
     },
