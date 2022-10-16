@@ -12,10 +12,7 @@ const esBuildInit = esbuild.initialize({
 
 // Rewrite `Content-Type` header for transformed responses.
 browser.webRequest.onHeadersReceived.addListener(
-    (req) => {
-        // Limit to obviously TypeScript files.
-        if (!req.url.endsWith('.ts')) return;
-
+    () => {
         return {
             responseHeaders: [
                 { name: 'Content-Type', value: 'application/javascript' },
@@ -23,7 +20,7 @@ browser.webRequest.onHeadersReceived.addListener(
         };
     },
     {
-        urls: [ 'http://localhost/*', 'https://localhost/*' ],
+        urls: [ 'http://localhost/*.ts', 'https://localhost/*.ts' ],
         types: [ 'script' ],
     },
     [ 'blocking', 'responseHeaders' ],
@@ -32,9 +29,6 @@ browser.webRequest.onHeadersReceived.addListener(
 // Transform the HTTP response of TypeScript requests.
 browser.webRequest.onBeforeRequest.addListener(
     (req) => {
-        // Limit to obviously TypeScript files.
-        if (!req.url.endsWith('.ts')) return;
-
         const responseFilter = browser.webRequest.filterResponseData(req.requestId);
         responseFilter.onstart = async () => {
             // Proxy the requested TypeScript file.
@@ -68,7 +62,7 @@ browser.webRequest.onBeforeRequest.addListener(
         };
     },
     {
-        urls: [ 'http://localhost/*', 'https://localhost/*' ],
+        urls: [ 'http://localhost/*.ts', 'https://localhost/*.ts' ],
         types: [ 'script' ],
     },
     [ 'blocking' ],
