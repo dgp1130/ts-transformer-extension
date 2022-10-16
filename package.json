@@ -9,7 +9,7 @@
     "build:background:esbuild": "cp node_modules/esbuild-wasm/esbuild.wasm dist/extension/",
     "build:background:bundle": "esbuild --bundle dist/js/background.js --outfile=dist/extension/background.js --log-level=warning --sourcemap",
     "build:manifest": "cp manifest.json dist/extension/",
-    "serve": "http-server src/site/ --mimetypes '{ \"application/typescript\": [\"ts\"] }'",
+    "serve": "http-server src/site/ -c-1 --mimetypes '{ \"application/typescript\": [\"ts\"] }'",
     "clean": "rm -rf dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
