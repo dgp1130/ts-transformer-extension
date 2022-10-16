@@ -67,3 +67,18 @@ browser.webRequest.onBeforeRequest.addListener(
     },
     [ 'blocking' ],
 );
+
+// Redirect `*.js` requests to `*.ts` so `import '/foo.js';` can be properly transformed
+// from `foo.ts`.
+browser.webRequest.onBeforeRequest.addListener(
+    (req) => {
+        return {
+            redirectUrl: [ ...req.url.split('.').slice(0, -1), 'ts' ].join('.'),
+        };
+    },
+    {
+        urls: [ 'http://localhost/*.js', 'https://localhost/*.js' ],
+        types: [ 'script' ],
+    },
+    [ 'blocking' ],
+);
